@@ -10,7 +10,7 @@
         <div class="col-xl-5">
           <div class="mt-4">
   <!-- Player and Detail -->
-              <details />
+              <helloWorld />
             </div>
         </div>
       </div>
@@ -21,12 +21,12 @@
 <script>
 // @ is an alias to /src
 import list from '@/components/VideoList.vue'
-import details from '@/components/VideoDetails.vue'
+import helloWorld from '@/components/VideoDetails.vue'
 
 export default {
   name: 'home',
   components: {
-    list, details
+    list, helloWorld
   }
 }
 </script>

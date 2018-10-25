@@ -3,7 +3,7 @@
       <div class="container">
         <router-link to="/"><a class="navbar-brand" href="#">Vue-dioh</a></router-link>
         <router-link to="/trending" ><a class='nav-link' href="#">Trending Vuedios</a></router-link>
-        <router-link to="/liked" ><a class='nav-link' href="#">liked Vuedios <small>(3)</small></a></router-link>
+        <router-link to="/liked" ><a class='nav-link' href="#">liked Vuedios <small>{{likes.length}}</small></a></router-link>
         <div class="header-right">
           <input v-if="!loginStatus" v-model="dataUser" type="text" placeholder="email">
           <input v-if="!loginStatus" v-model="password" type="password" placeholder="password">
@@ -26,7 +26,7 @@ export default {
         }
     },
     computed:{
-        ...mapState(['loggedin']),
+        ...mapState(['loggedin', 'likes']),
         loginStatus(){
             return this.loggedin
         }
@@ -38,7 +38,7 @@ export default {
         }
     },
     methods:{
-        ...mapActions(['isLogin','profile']),
+        ...mapActions(['isLogin']),
         submitLogout(){
             localStorage.removeItem('token')
             localStorage.removeItem('userId')
@@ -46,9 +46,7 @@ export default {
 
         },
         submitLogin(){   
-            this.errorLogin = false         
-            let email = this.dataUser.indexOf('@')            
-            if(email !== -1){                
+            this.errorLogin = false                        
                 let data = {
                     email : this.dataUser,
                     password: this.password
@@ -63,24 +61,6 @@ export default {
                         this.isLogin(false)
                         this.errorLogin = true
                     });
-            }
-            else if( email == -1){
-                let data = {
-                    username : this.dataUser,
-                    password: this.password
-                }
-                axios.post('http://localhost:3000/users/signin', data)
-                    .then((result) => {                        
-                        localStorage.setItem('token',result.data.token)
-                        localStorage.setItem('userId',result.data.id)
-                        this.isLogin(true)
-                        this.profile(result.data.foundUser)
-                        
-                    }).catch((err) => { 
-                        this.isLogin(false)
-                        this.errorLogin = true
-                    });                
-            }            
         }
     }
 }

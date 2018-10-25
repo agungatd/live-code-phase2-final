@@ -1,35 +1,90 @@
 
 <template>
   <div id='detailsVideo'>
+
     <h3>Details:</h3>
+    <h1 v-if='showLogin'>Please Login to like</h1>
       <div class="card mb-2" style="width: 100%;">
         <div class="card-body">
-          <h5 class="card-title">YouTube Player goes here</h5>
+          <img class="card-title" :src='video.thumbnails.high.url'/>
           <p class="card-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            sed do eiusmod tempor incididunt ut labore et dolore magna
-            aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-            ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint
-            occaecat cupidatat non proident, sunt in culpa qui officia
-            deserunt mollit anim id est laborum
+            
           </p>
         </div>
       </div>
-      <strong>Video Title</strong>&nbsp;
-      <button class="btn btn-sm btn-primary">Like this Video!</button><br />
+      <strong>{{video.title}}</strong>&nbsp;
+      <button class="btn btn-sm btn-primary" @click='liked(video)'>Like this Video!</button><br />
       <br />
-      <pre class="card">Video description goes here, you can addnewline too!</pre>
+      <pre class="card">{{video.description}}</pre>
       <br />
+      
   </div>
 </template>
 
 <script>
+import {
+    mapActions,
+    mapState
+  } from 'vuex'
+
   export default {
     name: 'detailsVideo',
     props: {
       msg: String
+    },
+    data() {
+      return {
+        video: '',
+        query: '',
+        showLogin: false,
+        msg: ''
+      }
+    },
+    methods: {
+      ...mapActions(['getLikes']),
+      getVideo(id) {
+        let self = this
+        axios.get(`https://www.googleapis.com/youtube/v3/videos`, { 
+          "params": {
+            "key": 'AIzaSyDRGkpMEtOnPSPPQXWrRYvZwdxgn5plEqI',
+            "part": 'snippet',
+            "id": id
+          }
+        })
+          .then((result) => {
+            // console.log('RESULT get id detailssss', result.data.items[0], 'XXXXX')
+            self.video = result.data.items[0].snippet
+          }).catch((err) => {
+            console.log( err)
+          })
+      }, 
+      liked(video) {
+        if(!this.loggedin) {
+          this.showLogin = true
+        } else {
+          // showLogin = false
+          this.likes.forEach(vid=>{
+            if(vid.title == video.title) {
+              msg = 'you can only like once per vid..'
+              showLogin = true
+              return
+            }
+          })
+              this.getLikes(video)
+              showLogin = false
+        }
+      }
+    },
+    computed: {
+      ...mapState(['loggedin', 'likes']),
+      getParamsId: function() {
+        return this.$route.params.id
+      }
+    },
+    watch: {
+      getParamsId: function(val) {
+        this.getVideo(val)
+      }
     }
   }
 </script>

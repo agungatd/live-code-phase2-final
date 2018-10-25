@@ -12,13 +12,13 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
-      // ,children: [
-      //   {
-      //     name: 'detailArticle',
-      //     path: '/home/:id',
-      //     component: () => import(/* webpackChunkName: "about" */ './components/VideoDetails.vue')
-      //   }
-      // ]
+      ,children: [
+        {
+          path: '/home/:id',
+          name: 'detailVideo',
+          component: () => import(/* webpackChunkName: "about" */ './components/VideoList.vue')
+        }
+      ]
     },
     {
       path: '/trending',

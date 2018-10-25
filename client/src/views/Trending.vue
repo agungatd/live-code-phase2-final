@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-xl-7">
           <div class="mt-4">
-            <list />
+            <list :isTrending='isTrending' />
           </div>
         </div>
       </div>
@@ -21,6 +21,13 @@ export default {
   name: 'home',
   components: {
     list, details
-  }
+  },
+   data() {
+      return {
+        videos: [],
+        query: '',
+        isTrending: true
+      }
+    },
 }
 </script>

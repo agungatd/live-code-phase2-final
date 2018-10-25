@@ -6,24 +6,22 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     loggedin:false,
-    profile: []  
+    likes: []  
   },
   mutations: {
     setLogin(state,payload){            
       state.loggedin = payload
     },
-    setUser(state,payload){      
-      state.profile = payload
-      console.log(state.user)
+    setLikes(state,payload){      
+      state.likes.push(payload)
     }
   },
   actions: {
     isLogin({ commit }, payload){
       commit('setLogin',payload)
     },
-    profile({ commit }, payload){
-      console.log(payload)
-      commit('setUser',payload)
+    getLikes({ commit }, payload){
+      commit('setLikes', payload)
     }
   }
 })
